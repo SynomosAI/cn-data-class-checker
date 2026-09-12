@@ -2,7 +2,7 @@
   "_instructions": "本文件是行业接入四件套之一。域 ID 一经分配不复用。填完跑平台侧校验器自测。",
   "profile_version": "domain/1.0",
   "domain_id": "dat",
-  "domain_name": "数据 · 分类分级与保护义务",
+  "domain_name": "数据 · 分类分级与保护义务（中国口径）",
   "operator": {
     "org": "待认领 — 本域开放给具备资质的运营方",
     "contact": "见 README 的「认领方式」",
