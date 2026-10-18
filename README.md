@@ -1,17 +1,65 @@
 # cn-data-class-checker
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Domain Profile](https://img.shields.io/badge/domain-dat%20%7C%20domain%2F1.0-blue.svg)](domain.manifest.json)
+[![Status: RESERVED](https://img.shields.io/badge/status-RESERVED%20%7C%20open%20claim-orange.svg)](domain.manifest.json)
+[![Standard: GB/T 43697](https://img.shields.io/badge/standard-GB%2FT%2043697--2024-2ea44f.svg)](domain.manifest.json)
+[![Privacy: default-off](https://img.shields.io/badge/privacy-default--off-brightgreen.svg)](privacy.json)
+
 > **状态：RESERVED（占位 · 开放认领）** — 本仓已按平台协议规范建好行业接入四件套骨架，
 > 等待具备本域资质的运营方认领并填充真实规则。
 
 把「这份数据属于哪一类哪一级、对应什么保护义务」拆成可核验的属性，让 AI 只做提示，不做终局定级。
 
-## 这个域管什么
+**关键词 / Keywords**：数据分类分级 · 重要数据 · 核心数据 · 个人信息保护 · 数据出境 · GB/T 43697 · domain profile · compliance checker · regulatory verification · data classification · data security · cross-border · MCP tool · attribute verification · gate map · privacy by default-off
+
+---
+
+## 这个域管什么 / What this domain covers
 
 数据分类分级与保护义务判定（GB/T 43697 中国口径）
 
 数据分类分级是个人信息保护与数据安全合规的地基。一般数据、重要数据、核心数据的识别直接决定保护强度与出境要求。AI 能做的是把要素摆清楚，定级须由数据责任方确认。
 
-## 域标识
+This domain is the **data · classification/grading & protection-obligation** profile (China context, GB/T 43697) of a multi-domain verification platform. It turns "which class and grade is this data, and which protection obligations follow" into verifiable attributes; the AI only surfaces the elements — final grading stays with the data owner.
+
+---
+
+## 快速开始 / Quick Start
+
+> 本仓是**域声明骨架**（行业接入四件套 JSON），不是可运行的应用程序。克隆后用标准 JSON 工具即可校验结构。
+
+```bash
+# 1. 克隆本仓 / clone this repo
+git clone https://github.com/SynomosAI/cn-data-class-checker.git
+cd cn-data-class-checker
+
+# 2. 校验四件套结构是否为合法 JSON（任意一个报错即骨架不完整）
+python -m json.tool domain.manifest.json > /dev/null
+python -m json.tool gate-map.json        > /dev/null
+python -m json.tool privacy.json         > /dev/null
+python -m json.tool checker.io.json     > /dev/null
+
+# 3. 查看本域名称与红线 / print domain name and red lines
+python -c "import json;m=json.load(open('domain.manifest.json',encoding='utf-8'));print(m['domain_name']);[print('-',r) for r in m['red_lines']]"
+```
+
+核验器（MCP 工具）的输入输出契约见 `checker.io.json`。一个最小调用示例：
+
+```json
+{
+  "subject_ref": "mpp:cn:8d1e2f3a",
+  "attribute_keys": ["dat.data_class", "dat.cross_border_obligation"],
+  "evidence": ["tsa:2026-09-12#sha256:7b8c..."],
+  "request_id": "req-20260912-0005"
+}
+```
+
+> 核验器只有「出示与核验」一个动作，**没有「判定」选项**——`已满足出境条件`、`重要数据定级`、`可跨境`等终局结论均在 `checker.io.json` 的 `_forbidden_outputs` 黑名单中。
+
+---
+
+## 域标识 / Domain identity
 
 | 项 | 值 |
 |---|---|
@@ -21,7 +69,7 @@
 | 当前状态 | `RESERVED` |
 | 占位时间 | 2026-09-12 |
 
-## 属性清单
+## 属性清单 / Attributes
 
 | 属性键 | 类型 | 说明 |
 |---|---|---|
@@ -31,7 +79,7 @@
 | `dat.cross_border_obligation` | enum | 出境路径义务，须人工确认 · 取值 none/contract_required/security_assessment/certification/prohibited |
 | `dat.retention_policy` | string | 留存期限与到期处置方式 |
 
-## 本域红线（不可逾越，机器可读）
+## 本域红线（不可逾越，机器可读）/ Red lines
 
 1. 重要数据与核心数据的识别须经数据责任方人工确认，AI 不得自行定级
 2. 不得输出「已满足出境条件」类结论，出境须走法定路径
@@ -40,16 +88,34 @@
 > 红线在 `gate-map.json` 中均有对应阻断规则。平台校验器会检查「每条红线都有规则覆盖」，
 > 缺失即校验失败——**制度与系统不允许不同步**。
 
-## 行业接入四件套
+## 行业接入四件套 / The four-piece access set
 
 | 文件 | 作用 |
 |---|---|
 | `domain.manifest.json` | 本域声明：属性清单、签发方要求、有效期、红线 |
 | `gate-map.json` | 本域「什么动作要多少摩擦」：silent / warn / confirm / block / require-owner |
 | `privacy.json` | 本域隐私声明：默认关闭、最小必要、可撤回、可删除 |
-| `checker` | 本域核验器（MCP 工具，**只出示核验，不下判定**） |
+| `checker.io.json` | 本域核验器（MCP 工具，**只出示核验，不下判定**） |
 
-## 核心原则
+## 仓库结构 / Repository layout
+
+```text
+cn-data-class-checker/
+├── README.md              # 本文件（中文为主，英文对照）
+├── README.en.md           # English README
+├── LICENSE                # MIT License（© 2026 SynomosAI）
+├── CODEOWNERS             # @SynomosAI/synomosai-gov
+├── domain.manifest.json  # 本域声明：属性清单 / 签发方 / 有效期 / 红线
+├── gate-map.json          # 本域摩擦分级：silent/warn/confirm/block/require-owner
+├── privacy.json           # 本域隐私声明：默认关闭 / 最小必要 / 可撤回 / 可删除
+├── checker.io.json         # 本域核验器（MCP 工具）IO 契约
+├── llms.txt               # 给 AI 的最小索引（llms.txt 标准）
+├── llms-full.txt          # 给 AI 的完整文本
+├── AGENTS.md              # 给 AI Agent 的工作指引
+└── SECURITY.md            # 安全策略与报告途径
+```
+
+## 核心原则 / Core principles
 
 **平台只当擂台，不当货架。** 本域的核验器只回答「这条声明是否可核验、缺什么要件」，
 不回答「这件事是否合规、该不该做」。判定权在本域的资质方、监管方与人。
@@ -57,7 +123,7 @@
 **隐私是准入条件，不是整改事项。** 缺失 `privacy.json` 或任一必填字段不符，
 符合性校验直接失败——不是警告，是拒绝接入。
 
-## 参考依据
+## 参考依据 / References
 
 - GB/T 43697-2024 数据安全技术 数据分类分级规则
 - 中华人民共和国数据安全法
@@ -66,7 +132,7 @@
 
 > 上列依据仅用于说明本域属性的来源与口径，不构成法律意见。具体适用以现行有效文本与主管部门解释为准。
 
-## 认领方式
+## 认领方式 / How to claim
 
 本域面向具备相应资质的机构开放。认领后请：
 
@@ -74,6 +140,8 @@
 2. 按本域现行有效规则校准属性取值与红线表述
 3. 跑平台侧校验器自测（五项判据全过方可提交）
 4. 提 PR，附资质证明与规则依据
+
+---
 
 ## 许可与署名
 
