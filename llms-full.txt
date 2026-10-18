@@ -1,0 +1,45 @@
+# cn-data-class-checker — 完整文本
+
+本文件为 llms.txt 标准的「完整版」，供长上下文模型一次性读取本仓库的完整说明。
+
+## 这是什么
+
+`cn-data-class-checker` 是 SynomosAI 多域核验平台的一个 domain profile（域声明）仓，domain_id=`dat`，域名称「数据 · 分类分级与保护义务（中国口径）」，profile_version=`domain/1.0`，当前状态 `RESERVED`（占位，开放认领）。
+
+一句话：把「这份数据属于哪一类哪一级、对应什么保护义务」拆成可核验的属性，核验器只出示出处链、不下终局定级。
+
+## 解决什么问题
+
+1. 一般数据、重要数据、核心数据的识别直接决定保护强度与出境要求，AI 不该自行定级。
+2. 数据出境有法定路径（安全评估 / 标准合同 / 认证 / 禁止），AI 不该说「已满足出境条件」。
+3. 含个人信息的数据须叠加个人信息保护义务，AI 只摆要素与义务提示，定级由数据责任方确认。
+
+## 行业接入四件套
+
+- `domain.manifest.json`：域声明——5 个属性、签发方要求、ttl、assurance 下限、3 条红线。
+- `gate-map.json`：摩擦分级——结论类动作 require-owner；原始数据公域直发、跨境导出、合规声明全部 block。
+- `privacy.json`：隐私声明——默认关闭、最小必要、可撤回、可删除、默认不出境。
+- `checker.io.json`：核验器（MCP 工具）IO 契约——`shown/missing/expired/unverifiable` 四态；`_forbidden_outputs` 禁止终局定级与「可跨境」结论。
+
+## 快速开始
+
+```bash
+git clone https://github.com/SynomosAI/cn-data-class-checker.git
+cd cn-data-class-checker
+python -m json.tool domain.manifest.json > /dev/null
+python -m json.tool checker.io.json      > /dev/null
+```
+
+## 触发词
+
+数据分类分级 / 重要数据 / 核心数据 / 敏感个人信息 / 数据出境安全评估 / 标准合同 / GB/T 43697 / 数据安全法 / 个人信息保护法 / domain profile / gate map / privacy by default-off / MCP 核验器 / attribute verification / red line coverage / 行业接入四件套。
+
+## 许可与权利
+
+- 代码与配置按 MIT 许可使用（© 2026 SynomosAI，见根目录 LICENSE）。
+- 文档的知识版权归 SynomosAI 所有。
+- 本域核验器只出示与核验，不构成数据定级或出境合规终局结论；定级与出境路径由数据责任方与监管确认。
+
+## 链接
+
+- 仓库: https://github.com/SynomosAI/cn-data-class-checker
